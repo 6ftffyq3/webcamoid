@@ -70,7 +70,7 @@ modules:
       - -DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}"
     sources:
       - type: git
-        url: https://github.com/webcamoid/webcamoid.git
+        url: https://github.com/${GITHUB_REPOSITORY}.git
         branch: ${GIT_BRANCH_NAME}
         commit: ${GIT_COMMIT_HASH}
 EOF

@@ -170,9 +170,7 @@ add_definitions(-DCOMMONS_TARGET="webcamoid"
                 -DTARGET_ARCH="${TARGET_ARCH}"
                 -DANDROID_OPENSSL_SUFFIX="${ANDROID_OPENSSL_SUFFIX}")
 
-if (NOCHECKUPDATES)
-    add_definitions(-DDISABLE_UPDATES_CHECK)
-endif ()
+add_definitions(-DDISABLE_UPDATES_CHECK)
 
 if (ANDROID)
     if (ENABLE_ANDROID_DEBUGGING)

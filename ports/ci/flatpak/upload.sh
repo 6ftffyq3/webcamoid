@@ -41,4 +41,4 @@ else
     releaseName=${verMaj}.${verMin}.${verPat}
 fi
 
-gh release upload "$releaseName" webcamoid-packages/linux/* --clobber -R "webcamoid/WebcamoidPrivate"
+gh release upload "$releaseName" webcamoid-packages/linux/* --clobber
