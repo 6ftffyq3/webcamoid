@@ -106,4 +106,4 @@ jobs:
         files: |
           webcamoid-packages/windows/*
         name: Daily Build
-        tag_name: daily-Build
+        tag_name: daily-build
