@@ -1,6 +1,9 @@
 name: Ubuntu
 
-on: [push, pull_request]
+on: [push]
+
+permissions:
+  contents: write
 
 env:
   QTIFWVER: 4.8.1
@@ -34,9 +37,6 @@ jobs:
       uses: addnab/docker-run-action@v3
       if: ${{ startsWith(github.ref, 'refs/tags/') }}
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: gcr.io
         image: ${{ matrix.dockerimg }}
         options: >-
           -v ${{ github.workspace }}:/sources
@@ -73,9 +73,6 @@ jobs:
       uses: addnab/docker-run-action@v3
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: gcr.io
         image: ${{ matrix.dockerimg }}
         options: >-
           -v ${{ github.workspace }}:/sources
@@ -113,22 +110,16 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.upload }}
       with:
-        repository: webcamoid/WebcamoidPrivate
         files: webcamoid-packages/linux-lunar-gcc/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
     - name: Daily Build Upload
       uses: softprops/action-gh-release@v1
       if: ${{ !startsWith(github.ref, 'refs/tags/') && matrix.upload && github.ref == 'refs/heads/master' }}
       with:
-        repository: webcamoid/WebcamoidPrivate
         body: "${{ github.event.head_commit.message }} (commit: [${{ github.sha }}](https://github.com/webcamoid/webcamoid/commit/${{ github.sha }}))<hr>**Note**: Ignore the commit information of the tag, the files in the release keep updating with every new build, these packages were built from [${{ github.sha }}](https://github.com/webcamoid/webcamoid/commit/${{ github.sha }}) commit."
         prerelease: true
         files: webcamoid-packages/linux-lunar-gcc/*
         name: Daily Build
         tag_name: daily-build
-      env:
-        GITHUB_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
   multiarch:
     name: Ubuntu Multiarch
     runs-on: ubuntu-latest
@@ -180,7 +171,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GIT_COMMIT_HASH: "${{ github.sha }}"
           GIT_BRANCH_NAME: "${{ github.ref_name }}"
-          FILE_PASSWORD: ${{ secrets.FILE_PASSWORD }}
           QTIFWVER: ${{ env.QTIFWVER }}
           APPIMAGEVER: ${{ env.APPIMAGEVER }}
           DISTRO: ${{ matrix.distro }}
@@ -222,7 +212,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GIT_COMMIT_HASH: "${{ github.sha }}"
           GIT_BRANCH_NAME: "${{ github.ref_name }}"
-          FILE_PASSWORD: ${{ secrets.FILE_PASSWORD }}
           QTIFWVER: ${{ env.QTIFWVER }}
           APPIMAGEVER: ${{ env.APPIMAGEVER }}
           DISTRO: ${{ matrix.distro }}
@@ -248,30 +237,17 @@ jobs:
           echo
           chmod +x ports/ci/linux-ubuntu/deploy.sh
           ./ports/ci/linux-ubuntu/deploy.sh
-    - name: VirusTotal Scan
-      uses: crazy-max/ghaction-virustotal@v4
-      if: ${{ matrix.upload }}
-      with:
-        vt_api_key: ${{ secrets.VT_API_KEY }}
-        files: |
-          webcamoid-packages/linux-ubuntu_latest-gcc/*
     - name: Release Upload
       uses: softprops/action-gh-release@v1
       if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.upload }}
       with:
-        repository: webcamoid/WebcamoidPrivate
         files: webcamoid-packages/linux-ubuntu_latest-gcc/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
     - name: Daily Build Upload
       uses: softprops/action-gh-release@v1
       if: ${{ !startsWith(github.ref, 'refs/tags/') && matrix.upload && github.ref == 'refs/heads/master' }}
       with:
-        repository: webcamoid/WebcamoidPrivate
         body: "${{ github.event.head_commit.message }} (commit: [${{ github.sha }}](https://github.com/webcamoid/webcamoid/commit/${{ github.sha }}))<hr>**Note**: Ignore the commit information of the tag, the files in the release keep updating with every new build, these packages were built from [${{ github.sha }}](https://github.com/webcamoid/webcamoid/commit/${{ github.sha }}) commit."
         prerelease: true
         files: webcamoid-packages/linux-ubuntu_latest-gcc/*
         name: Daily Build
         tag_name: daily-build
-      env:
-        GITHUB_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
