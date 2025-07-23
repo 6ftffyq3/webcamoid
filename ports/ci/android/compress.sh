@@ -32,6 +32,6 @@ verMin=$(grep VER_MIN libAvKys/cmake/ProjectCommons.cmake | awk '{print $2}' | t
 verPat=$(grep VER_PAT libAvKys/cmake/ProjectCommons.cmake | awk '{print $2}' | tr -d ')' | head -n 1)
 releaseVer=${verMaj}.${verMin}.${verPat}
 
-7z a -p"${FILE_PASSWORD}" -mx1 -mmt4 "webcamoid-packages/webcamoid-android-with-ads-${releaseVer}.7z" webcamoid-packages/android
+7z a -mx1 -mmt4 "webcamoid-packages/webcamoid-android-with-ads-${releaseVer}.7z" webcamoid-packages/android
 rm -vf webcamoid-packages/android/*
 mv -vf webcamoid-packages/*.7z webcamoid-packages/android/

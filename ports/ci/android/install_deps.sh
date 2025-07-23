@@ -92,42 +92,6 @@ chown -R aurbuild:aurbuild /tmp/aurbuild
 su - aurbuild -c "git clone https://aur.archlinux.org/yay.git /tmp/aurbuild/yay"
 su - aurbuild -c "cd /tmp/aurbuild/yay && makepkg -si --noconfirm"
 
-# Install gdown
-
-su - aurbuild -c "yay --noconfirm --needed -S gdown"
-
-# Download local Android binary repository
-
-gdriveId='1OvewPH0SmPWAPPga2H06gevTKvqiZ9uo'
-gdown -c -O arch-repo-local-packages.7z "https://drive.google.com/uc?id=${gdriveId}"
-7z x -p"${FILE_PASSWORD}" -oarch-repo/ arch-repo-local-packages.7z
-
-# Check the db file
-
-ls "${PWD}/arch-repo/local-packages/os/any/local-packages.db"
-
-# Asign the local repository to the alpm group
-
-chown :alpm -Rf "${PWD}/arch-repo"
-
-# Map the directory to a local server
-
-nohup python -m http.server --directory "${PWD}/arch-repo" &
-sleep 10s
-cat ~/nohup.out || true
-
-# Configure local Android binary repository
-
-cat << EOF >> /etc/pacman.conf
-
-[local-packages]
-SigLevel = Never
-Server = http:///localhost:8000/local-packages/os/any
-EOF
-sed -i 's/Required DatabaseOptional/Never/g' /etc/pacman.conf
-
-pacman -Syy
-
 # Configure Java
 
 archlinux-java status
