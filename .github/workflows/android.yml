@@ -17,6 +17,9 @@ jobs:
       fail-fast: false
       matrix:
        include:
+         - target_arch: armeabi-v7a:arm64-v8a:x86:x86_64
+           upload: 1
+           enable_ads: 0
          - target_arch: armeabi-v7a:arm64-v8a
            upload: 1
            enable_ads: 0
@@ -33,6 +36,9 @@ jobs:
            upload: 1
            enable_ads: 0
          - target_arch: x86_64
+           upload: 1
+           enable_ads: 0
+         - target_arch: riscv64
            upload: 1
            enable_ads: 0
     env:
